@@ -1,10 +1,12 @@
 package com.hotelbeds.supplierintegrations.hackertest.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {
@@ -54,8 +56,17 @@ public class DateUtils {
 	 */
 	public static LocalDateTime toLocalDateTime(String time) {
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN, Locale.UK)
-				.withZone(ZoneId.systemDefault());
-		return LocalDateTime.parse(time, formatter);
+		SimpleDateFormat format = new SimpleDateFormat(PATTERN, Locale.ENGLISH);
+		try {
+			return toLocalDateTime(format.parse(time));
+		} catch (ParseException e) {
+			return null;
+		}
 	}
+	
+	private static LocalDateTime toLocalDateTime(Date date) {
+		return date.toInstant().atZone(ZoneId.systemDefault())
+			      .toLocalDateTime();
+	}
+	
 }
